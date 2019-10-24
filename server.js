@@ -1,21 +1,32 @@
 const dotenv  =  require("dotenv")
 const express =   require("express")
+const morgan  = require("morgan")
+const cors =  require("cors")
+const colors =  require("colors")
 const app =  express()
 
-//load routes
-const bootcamps  =  require('./routes/bootcamp')
+
 
 //load env vars
 dotenv.config({path:'./config/config.env'});
 
-const logger  = (req,res,next) =>{
-     req.hello  = 'world!'
-     next();
-    }
+
+//connect to DB
+const connectDB =  require("./config/db")
+connectDB()
+
+//load routes
+const bootcamps  =  require('./routes/bootcamp')
+
 
 //setup middleware
 app.use(express.urlencoded({extended:true}), express.json())
-app.use(logger)
+app.use(cors())
+
+if(process.env.NODE_ENV ==="development"){
+     app.use(morgan())
+}
+
 
 //setup routes
 app.use('/api/v1/bootcamps',bootcamps)
@@ -26,6 +37,14 @@ app.get('/',(req,res)=>{
    res.send("hello dude")    
 })
 
-app.listen(PORT,()=>{
-     console.log(`server running on ${process.env.NODE_ENV}  mode on port ${PORT}`);
+const server = app.listen(PORT,()=>{
+     console.log(`server running on ${process.env.NODE_ENV}  mode on port ${PORT}`.yellow.bold);
+});
+
+// Handle unhandled rejections
+process.on('unhandledRejections',(err,promise)=>{
+  console.log(`Error: ${err.message}`.red)
+  //close server and exist process
+  server.close(()=> process.exit(1))
+
 });
