@@ -3,33 +3,43 @@ const express =   require("express")
 const morgan  = require("morgan")
 const cors =  require("cors")
 const colors =  require("colors")
+const errorHandler =  require("./middleware/error")
 const app =  express()
-
 
 
 //load env vars
 dotenv.config({path:'./config/config.env'});
 
 
+//load routes
+const bootcamps  =  require('./routes/bootcamp')
+
 //connect to DB
 const connectDB =  require("./config/db")
 connectDB()
 
-//load routes
-const bootcamps  =  require('./routes/bootcamp')
 
-
-//setup middleware
+//setyp bodyparser
 app.use(express.urlencoded({extended:true}), express.json())
-app.use(cors())
 
-if(process.env.NODE_ENV ==="development"){
+
+//for loggin middleware
+if(process.env.NODE_ENV === "development"){
      app.use(morgan())
 }
 
 
+
 //setup routes
 app.use('/api/v1/bootcamps',bootcamps)
+//setup middleware
+app.use(cors())
+app.use(errorHandler)
+
+
+
+
+
 
 const PORT  =  process.env.PORT || 5000;
 
