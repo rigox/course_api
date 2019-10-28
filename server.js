@@ -6,13 +6,14 @@ const colors =  require("colors")
 const errorHandler =  require("./middleware/error")
 const app =  express()
 
+//load routes
+const bootcamps  =  require('./routes/bootcamp')
+const course  =  require('./routes/course')
+
 
 //load env vars
 dotenv.config({path:'./config/config.env'});
 
-
-//load routes
-const bootcamps  =  require('./routes/bootcamp')
 
 //connect to DB
 const connectDB =  require("./config/db")
@@ -32,6 +33,7 @@ if(process.env.NODE_ENV === "development"){
 
 //setup routes
 app.use('/api/v1/bootcamps',bootcamps)
+app.use('/api/v1/courses',course)
 //setup middleware
 app.use(cors())
 app.use(errorHandler)
