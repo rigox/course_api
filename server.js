@@ -3,7 +3,9 @@ const express =   require("express")
 const morgan  = require("morgan")
 const cors =  require("cors")
 const colors =  require("colors")
+const fileupload  =  require("express-fileupload")
 const errorHandler =  require("./middleware/error")
+const path   =  require("path")
 const app =  express()
 
 //load routes
@@ -29,7 +31,11 @@ if(process.env.NODE_ENV === "development"){
      app.use(morgan())
 }
 
+//File uploding
+app.use(fileupload())
 
+//set static folder
+app.use(express.static(path.join(__dirname , 'public')))
 
 //setup routes
 app.use('/api/v1/bootcamps',bootcamps)
