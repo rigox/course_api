@@ -11,7 +11,7 @@ const app =  express()
 //load routes
 const bootcamps  =  require('./routes/bootcamp')
 const course  =  require('./routes/course')
-
+const  auth =  require("./routes/auth")
 
 //load env vars
 dotenv.config({path:'./config/config.env'});
@@ -40,6 +40,8 @@ app.use(express.static(path.join(__dirname , 'public')))
 //setup routes
 app.use('/api/v1/bootcamps',bootcamps)
 app.use('/api/v1/courses',course)
+app.use('/api/v1/auth',auth)
+
 //setup middleware
 app.use(cors())
 app.use(errorHandler)
