@@ -5,6 +5,7 @@ const cors =  require("cors")
 const colors =  require("colors")
 const fileupload  =  require("express-fileupload")
 const errorHandler =  require("./middleware/error")
+const cookies =  require("cookie-parser")
 const path   =  require("path")
 const app =  express()
 
@@ -22,9 +23,12 @@ const connectDB =  require("./config/db")
 connectDB()
 
 
-//setyp bodyparser
+//setup bodyparser
 app.use(express.urlencoded({extended:true}), express.json())
 
+
+//setup cookie Parser
+app.use(cookies())
 
 //for loggin middleware
 if(process.env.NODE_ENV === "development"){
